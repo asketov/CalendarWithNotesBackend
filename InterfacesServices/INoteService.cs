@@ -1,11 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core;
 
 namespace InterfacesServices
 {
     public interface INoteService
     {
-        Task AddNoteAsync(Note note);
+        Task<int> AddNoteAsync(Note note);
         Task<Note> TakeNoteAsync(int id);
+        Task<List<Note>> TakeNotesAsync(int dateNumber);
+        Task<bool> DeleteNoteAsync(int id);
     }
 }

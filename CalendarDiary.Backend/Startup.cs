@@ -23,6 +23,12 @@ namespace CalendarDiary.Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => options.AddPolicy("CorsPolicy",
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader(); ;
+                }
+            ));
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")
@@ -43,7 +49,7 @@ namespace CalendarDiary.Backend
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints =>
             {

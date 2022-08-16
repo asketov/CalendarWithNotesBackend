@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Core;
-using Interfaces;
+using InterfacesDomain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data
@@ -16,7 +17,12 @@ namespace Data
         }
         public async Task<Note> GetNoteAsync(int id)
         {
-           return await _db.Notes.FirstOrDefaultAsync(u => u.Id == id);
+           return await _db.Notes.FirstOrDefaultAsync(u => u.NoteId == id);
+        }
+
+        public async Task<List<Note>> GetNotesAsync(int dateNumber)
+        {
+            return await _db.Notes.Where(note => note.Date.DateNumber == dateNumber).ToListAsync();
         }
 
         public async Task CreateNoteAsync(Note note)
@@ -24,9 +30,27 @@ namespace Data
             await _db.Notes.AddAsync(note);
         }
 
-        public async void SaveAsync()
+        public async Task<bool> DeleteNoteAsync(int id)
         {
-            await _db.SaveChangesAsync();
+            var note = await _db.Notes.FirstOrDefaultAsync(note => note.NoteId == id);
+            if (note != null)
+            {
+                _db.Notes.Remove(note);
+                return true;
+            }
+            return false;
+        }
+
+        public async Task SaveAsync()
+        {
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using CalendarDiary.Backend.ApiModels;
 using Core;
 using InterfacesServices;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CalendarDiary.Backend.Controllers
 {
     [ApiController]
-    [Microsoft.AspNetCore.Components.Route("api/[controller]")]
+    [Route("api/[controller]")]
     public class NoteController : ControllerBase
     {
         private readonly INoteService _noteService;
@@ -16,16 +19,46 @@ namespace CalendarDiary.Backend.Controllers
             _noteService = noteService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<Note>> GetNote(int id)
+        [HttpGet("GetNote/{id}")]
+        public async Task<ActionResult<GetNoteModel>> GetNote(int id)
         {
-            return await _noteService.TakeNoteAsync(id);
+            var note = await _noteService.TakeNoteAsync(id);
+            if (note == null)
+            {
+                return NotFound();
+            }
+            return GetNoteModel.NoteToDTO(note);
         }
-        [HttpPost]
-        public async Task PostNote(Note note)
+        [HttpGet("GetNotes/{dateNumber}")]
+        public async Task<ActionResult<IEnumerable<GetNoteModel>>> GetNotes(int dateNumber)
         {
-            await _noteService.AddNoteAsync(note);
+            var notes = await _noteService.TakeNotesAsync(dateNumber);
+            return notes.Select(note => GetNoteModel.NoteToDTO(note)).ToList();
         }
-
+        [HttpPost("PostNote")]
+        public async Task<ActionResult<int>> PostNote(PostNoteModel noteModel)
+        {
+            if (noteModel == null)
+            {
+                return BadRequest();
+            }
+            Note note = new Note()
+            { 
+                Time = noteModel.Time,
+                Event = noteModel.Event,
+                Date = new Date()
+                {
+                    DateNumber = noteModel.NumberDate
+                }
+            };
+            int id = await _noteService.AddNoteAsync(note);
+            return CreatedAtAction(nameof(GetNote), new {id = id}, id);
+        }
+        [HttpDelete("DeleteNote/{id}")]
+        public async Task<ActionResult> DeleteNote(int id)
+        {
+            var success = await _noteService.DeleteNoteAsync(id);
+            return success ? Ok() : NotFound();
+        }
     }
 }

@@ -7,5 +7,6 @@ namespace Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public DbSet<Note> Notes { get; set; }
+        public DbSet<Date> Dates { get; set; }
     }
 }

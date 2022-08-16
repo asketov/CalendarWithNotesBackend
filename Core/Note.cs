@@ -1,16 +1,17 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core
 {
     public class Note
     {
         [Key]
-        public int Id { get; set; }
-        [Required]
-        public string Name { get; set; }
-        public string Message { get; set; }
-        [Required]
-        public DateTime Date { get; set; }
-    }
+        public int NoteId { get; set; }
+        public string Time { get; set; }
+        public string Event { get; set; }
+        public int DateId { get; set; }
+        [ForeignKey("DateId")]
+        public Date? Date { get; set; }
+     }
 }
