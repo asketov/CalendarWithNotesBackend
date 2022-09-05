@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
-    public class DateRepository : IDateRepository
+    public class DateRepository : BaseDbRepository, IDateRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public DateRepository(ApplicationDbContext db)
+        public DateRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }

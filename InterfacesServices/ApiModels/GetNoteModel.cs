@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core;
+﻿using Core;
 
-namespace CalendarDiary.Backend.ApiModels
+namespace InterfacesServices.ApiModels
 {
     public class GetNoteModel
     {
@@ -13,7 +8,7 @@ namespace CalendarDiary.Backend.ApiModels
         public string Time { get; set; }
         public string Event { get; set; }
 
-        public static GetNoteModel NoteToDTO(Note note) =>
+        public static GetNoteModel NoteToDto(Note note) =>
             new GetNoteModel()
             {
                 Id = note.NoteId,

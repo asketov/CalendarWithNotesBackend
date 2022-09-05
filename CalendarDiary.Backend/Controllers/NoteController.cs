@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CalendarDiary.Backend.ApiModels;
 using Core;
 using InterfacesServices;
+using InterfacesServices.ApiModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalendarDiary.Backend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class NoteController : ControllerBase
     {
         private readonly INoteService _noteService;
@@ -27,13 +27,13 @@ namespace CalendarDiary.Backend.Controllers
             {
                 return NotFound();
             }
-            return GetNoteModel.NoteToDTO(note);
+            return GetNoteModel.NoteToDto(note);
         }
         [HttpGet("GetNotes/{dateNumber}")]
         public async Task<ActionResult<IEnumerable<GetNoteModel>>> GetNotes(int dateNumber)
         {
             var notes = await _noteService.TakeNotesAsync(dateNumber);
-            return notes.Select(note => GetNoteModel.NoteToDTO(note)).ToList();
+            return notes.Select(note => GetNoteModel.NoteToDto(note)).ToList();
         }
         [HttpPost("PostNote")]
         public async Task<ActionResult<int>> PostNote(PostNoteModel noteModel)
@@ -42,15 +42,7 @@ namespace CalendarDiary.Backend.Controllers
             {
                 return BadRequest();
             }
-            Note note = new Note()
-            { 
-                Time = noteModel.Time,
-                Event = noteModel.Event,
-                Date = new Date()
-                {
-                    DateNumber = noteModel.NumberDate
-                }
-            };
+            Note note = PostNoteModel.DtoToNote(noteModel);
             int id = await _noteService.AddNoteAsync(note);
             return CreatedAtAction(nameof(GetNote), new {id = id}, id);
         }

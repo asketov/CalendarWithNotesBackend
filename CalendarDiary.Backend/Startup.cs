@@ -1,12 +1,17 @@
+using CalendarDiary.Backend.Middlewares;
 using Data;
 using ImplementationServices;
+using ImplementationServices.Additionaly;
+using InterfacesDomain;
 using InterfacesServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace CalendarDiary.Backend
@@ -23,10 +28,11 @@ namespace CalendarDiary.Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddCors(options => options.AddPolicy("CorsPolicy",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader(); ;
+                    builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
                 }
             ));
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -35,6 +41,7 @@ namespace CalendarDiary.Backend
                 ));
             services.AddControllers();
             services.AddTransient<INoteService, NoteService>();
+            services.AddTransient<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,7 +56,10 @@ namespace CalendarDiary.Backend
 
             app.UseRouting();
 
+
             app.UseCors("CorsPolicy");
+
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

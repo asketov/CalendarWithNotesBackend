@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core;
 using Data;
+using InterfacesDomain;
 using InterfacesServices;
 
 namespace ImplementationServices
 {
     public class NoteService : INoteService
     {
-        private readonly NoteRepository _noteRepository;
-        private readonly DateRepository _dateRepository;
+        private readonly INoteRepository _noteRepository;
+        private readonly IDateRepository _dateRepository;
 
         public NoteService(ApplicationDbContext db)
         {
