@@ -36,14 +36,14 @@ namespace CalendarDiary.Backend.Middlewares
         public async Task AttachUserToContext(HttpContext context, IUserService userService, string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-                // min 16 characters
-                var key = Encoding.ASCII.GetBytes(_configuration["Secret"]);
+            var key = Encoding.ASCII.GetBytes(_configuration["Secret"]);
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false,
+                    ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 }, out SecurityToken validatedToken);
 
