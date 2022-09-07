@@ -9,6 +9,8 @@ using ImplementationServices.Additionaly;
 using InterfacesDomain;
 using InterfacesServices;
 using InterfacesServices.ApiModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace ImplementationServices
@@ -17,7 +19,7 @@ namespace ImplementationServices
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
-        public UserService(ApplicationDbContext db, IConfiguration configuration)
+        public UserService(ApplicationDbContext db, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = new UserRepository(db);
             _configuration = configuration;
@@ -26,7 +28,7 @@ namespace ImplementationServices
         {
             return await _userRepository.GetUserAsync(id);
         }
-        public async Task<LoginResponse> Authenticate(LoginRequest model)
+        public async Task<LoginResponse> Login(LoginRequest model)
         {
             var user = await _userRepository.GetUserAsync(user => user.Email == model.Email && user.Password == model.Password);
             if (user == null)
@@ -44,7 +46,7 @@ namespace ImplementationServices
             {
                 await _userRepository.AddUserAsync(userModel.ToUser());
                 await _userRepository.SaveAsync();
-                var response = await Authenticate(new LoginRequest
+                var response = await Login(new LoginRequest
                 {
                     Email = userModel.Email,
                     Password = userModel.Password

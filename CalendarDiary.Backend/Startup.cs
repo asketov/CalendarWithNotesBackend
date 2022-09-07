@@ -40,6 +40,7 @@ namespace CalendarDiary.Backend
                     Configuration.GetConnectionString("DefaultConnection")
                 ));
             services.AddControllers();
+            services.AddHttpContextAccessor();
             services.AddTransient<INoteService, NoteService>();
             services.AddTransient<IUserService, UserService>();
         }

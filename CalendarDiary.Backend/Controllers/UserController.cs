@@ -20,7 +20,7 @@ namespace CalendarDiary.Backend.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginRequest model)
         {
-            var response = await _userService.Authenticate(model);
+            var response = await _userService.Login(model);
 
             if (response == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
@@ -34,7 +34,7 @@ namespace CalendarDiary.Backend.Controllers
             var response = await _userService.Register(userModel);
             if (response == null)
             {
-                return BadRequest(new {message = "Didn't register!"});
+                return BadRequest(new {message = "Пользователь с таким именем уже существует"});
             }
             return Ok(response);
         }

@@ -5,6 +5,7 @@ using Core;
 using Data;
 using InterfacesDomain;
 using InterfacesServices;
+using InterfacesServices.ApiModels;
 
 namespace ImplementationServices
 {
@@ -18,12 +19,13 @@ namespace ImplementationServices
             _noteRepository = new NoteRepository(db);
             _dateRepository = new DateRepository(db);
         }
-        public async Task<int> AddNoteAsync(Note note)
+        public async Task<int> AddNoteAsync(PostNoteModel noteModel)
         {
-            int DateId = await _dateRepository.CheckDateIsExists(note.Date.DateNumber);
-            if (DateId != 0)
+            Note note = PostNoteModel.DtoToNote(noteModel);
+            var date = await _dateRepository.GetDateAsync(note.Date.DateNumber);
+            if (date != null)
             {
-                note.DateId = DateId;
+                note.DateId = date.DateId;
                 note.Date = null;
             }
             await _noteRepository.CreateNoteAsync(note);

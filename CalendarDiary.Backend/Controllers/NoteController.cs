@@ -42,8 +42,7 @@ namespace CalendarDiary.Backend.Controllers
             {
                 return BadRequest();
             }
-            Note note = PostNoteModel.DtoToNote(noteModel);
-            int id = await _noteService.AddNoteAsync(note);
+            int id = await _noteService.AddNoteAsync(noteModel);
             return CreatedAtAction(nameof(GetNote), new {id = id}, id);
         }
         [HttpDelete("DeleteNote/{id}")]
