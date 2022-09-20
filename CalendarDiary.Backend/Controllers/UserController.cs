@@ -1,8 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using CalendarDiary.Backend.Attributes;
+using ImplementationServices;
 using InterfacesServices;
 using InterfacesServices.ApiModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace CalendarDiary.Backend.Controllers
@@ -12,10 +19,11 @@ namespace CalendarDiary.Backend.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
-
-        public UserController(IUserService userService)
+        private readonly IConfiguration _configuration;
+        public UserController(IUserService userService, IConfiguration configuration)
         {
             _userService = userService;
+            _configuration = configuration;
         }
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginRequest model)
@@ -39,6 +47,17 @@ namespace CalendarDiary.Backend.Controllers
             return Ok(response);
         }
 
+        [HttpGet("CheckToken/{token}")]
+        public async Task<IActionResult> CheckToken(string token)
+        {
+            var user = await _userService.CheckToken(token);
+            if (user != null)
+            {
+                return Ok(new LoginResponse(user,token));
+            }
+            else return StatusCode(401);
+        }
+
         [Authorize]
         [HttpGet("getUser/{id}")]
         public async Task<IActionResult> GetUser(int id)
@@ -46,6 +65,7 @@ namespace CalendarDiary.Backend.Controllers
             var user = await _userService.GetById(id);
             return Ok(user);
         }
+
 
     }
 }

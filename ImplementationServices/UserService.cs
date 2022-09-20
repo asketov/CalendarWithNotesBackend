@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using InterfacesServices.ApiModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ImplementationServices
 {
@@ -19,7 +21,7 @@ namespace ImplementationServices
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
-        public UserService(ApplicationDbContext db, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public UserService(ApplicationDbContext db, IConfiguration configuration)
         {
             _userRepository = new UserRepository(db);
             _configuration = configuration;
@@ -54,6 +56,32 @@ namespace ImplementationServices
                 return response;
             }
             return null;
+        }
+
+        public async Task<User> CheckToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Secret"]);
+            try
+            {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
+                var user = await GetById(userId);
+                return user;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
     }

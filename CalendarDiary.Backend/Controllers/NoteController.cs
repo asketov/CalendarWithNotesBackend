@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CalendarDiary.Backend.Attributes;
 using Core;
 using InterfacesServices;
 using InterfacesServices.ApiModels;
@@ -10,6 +11,7 @@ namespace CalendarDiary.Backend.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class NoteController : ControllerBase
     {
         private readonly INoteService _noteService;
@@ -51,5 +53,6 @@ namespace CalendarDiary.Backend.Controllers
             var success = await _noteService.DeleteNoteAsync(id);
             return success ? Ok() : NotFound();
         }
+        
     }
 }

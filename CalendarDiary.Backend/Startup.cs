@@ -32,7 +32,7 @@ namespace CalendarDiary.Backend
             services.AddCors(options => options.AddPolicy("CorsPolicy",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
+                    builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
                 }
             ));
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -40,7 +40,6 @@ namespace CalendarDiary.Backend
                     Configuration.GetConnectionString("DefaultConnection")
                 ));
             services.AddControllers();
-            services.AddHttpContextAccessor();
             services.AddTransient<INoteService, NoteService>();
             services.AddTransient<IUserService, UserService>();
         }

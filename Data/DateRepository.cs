@@ -17,7 +17,7 @@ namespace Data
         {
             _db = db;
         }
-        public async Task<Date> CheckDateIsExists(int dateNumber)
+        public async Task<Date> GetDateAsync(int dateNumber)
         {
             var date = await _db.Dates.FirstOrDefaultAsync(date => date.DateNumber == dateNumber);
             return date;

@@ -11,9 +11,6 @@ namespace InterfacesServices.ApiModels
         [Required]
         [MinLength(6, ErrorMessage = "Пароль не валиден")]
         public string Password { get; set; }
-        [Required]
-        [Compare("Password", ErrorMessage = "Пароли не совпадают")]
-        public string ConfirmPassword { get; set; }
 
         public User ToUser()
         {

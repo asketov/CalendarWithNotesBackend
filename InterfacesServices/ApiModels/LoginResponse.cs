@@ -6,13 +6,13 @@ namespace InterfacesServices.ApiModels
     {
         public long Id { get; set; }
         public string Email { get; set; }
-        public string Token { get; set; }
+        public string AccessToken { get; set; }
 
         public LoginResponse(User user, string token)
         {
             Id = user.Id;
             Email = user.Email;
-            Token = token;
+            AccessToken = token;
         }
     }
 }
