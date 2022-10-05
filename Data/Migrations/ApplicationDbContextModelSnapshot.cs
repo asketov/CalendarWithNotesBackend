@@ -49,6 +49,9 @@ namespace Data.Migrations
                     b.Property<string>("Time")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("NoteId");
 
                     b.HasIndex("DateId");

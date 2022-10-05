@@ -34,7 +34,8 @@ namespace CalendarDiary.Backend.Controllers
         [HttpGet("GetNotes/{dateNumber}")]
         public async Task<ActionResult<IEnumerable<GetNoteModel>>> GetNotes(int dateNumber)
         {
-            var notes = await _noteService.TakeNotesAsync(dateNumber);
+            var user = (User)HttpContext.Items["User"];
+            var notes = await _noteService.TakeNotesAsync(dateNumber, user.Id);
             return notes.Select(note => GetNoteModel.NoteToDto(note)).ToList();
         }
         [HttpPost("PostNote")]
@@ -44,7 +45,8 @@ namespace CalendarDiary.Backend.Controllers
             {
                 return BadRequest();
             }
-            int id = await _noteService.AddNoteAsync(noteModel);
+            var user = (User)HttpContext.Items["User"];
+            int id = await _noteService.AddNoteAsync(noteModel, user.Id);
             return CreatedAtAction(nameof(GetNote), new {id = id}, id);
         }
         [HttpDelete("DeleteNote/{id}")]

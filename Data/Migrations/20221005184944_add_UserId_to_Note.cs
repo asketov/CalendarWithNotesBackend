@@ -2,7 +2,7 @@
 
 namespace Data.Migrations
 {
-    public partial class create : Migration
+    public partial class add_UserId_to_Note : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,11 +11,26 @@ namespace Data.Migrations
                 columns: table => new
                 {
                     DateId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DateNumber = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Dates", x => x.DateId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -26,7 +41,8 @@ namespace Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Time = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Event = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateId = table.Column<int>(type: "int", nullable: false)
+                    DateId = table.Column<int>(type: "int", nullable: false),
+                    User = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,6 +65,9 @@ namespace Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Notes");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Dates");

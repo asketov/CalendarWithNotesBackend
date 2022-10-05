@@ -13,5 +13,6 @@ namespace Core
         public int DateId { get; set; }
         [ForeignKey("DateId")]
         public Date? Date { get; set; }
+        public int UserId { get; set; }
      }
 }

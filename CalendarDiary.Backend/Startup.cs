@@ -7,6 +7,7 @@ using InterfacesServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +43,7 @@ namespace CalendarDiary.Backend
             services.AddControllers();
             services.AddTransient<INoteService, NoteService>();
             services.AddTransient<IUserService, UserService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,12 +54,13 @@ namespace CalendarDiary.Backend
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
 
+            
 
             app.UseCors("CorsPolicy");
+
+            app.UseCookiePolicy();
 
             app.UseMiddleware<JwtMiddleware>();
 
@@ -68,3 +71,4 @@ namespace CalendarDiary.Backend
         }
     }
 }
+

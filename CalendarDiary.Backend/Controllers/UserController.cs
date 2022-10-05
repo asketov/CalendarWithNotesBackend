@@ -26,13 +26,11 @@ namespace CalendarDiary.Backend.Controllers
             _configuration = configuration;
         }
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(LoginRequest model)
-        {
+        public async Task<IActionResult> Login(LoginRequest model) {
             var response = await _userService.Login(model);
 
             if (response == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
-
+                return StatusCode(401,"Логин или пароль неверны");
             return Ok(response);
         }
 
@@ -55,7 +53,7 @@ namespace CalendarDiary.Backend.Controllers
             {
                 return Ok(new LoginResponse(user,token));
             }
-            else return StatusCode(401);
+            else return StatusCode(401, "Токен не валиден");
         }
 
         [Authorize]

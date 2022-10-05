@@ -19,9 +19,10 @@ namespace ImplementationServices
             _noteRepository = new NoteRepository(db);
             _dateRepository = new DateRepository(db);
         }
-        public async Task<int> AddNoteAsync(PostNoteModel noteModel)
+        public async Task<int> AddNoteAsync(PostNoteModel noteModel, int userId)
         {
             Note note = PostNoteModel.DtoToNote(noteModel);
+            note.UserId = userId;
             var date = await _dateRepository.GetDateAsync(note.Date.DateNumber);
             if (date != null)
             {
@@ -36,9 +37,9 @@ namespace ImplementationServices
         {
             return await _noteRepository.GetNoteAsync(id);
         }
-        public async Task<List<Note>> TakeNotesAsync(int dateNumber)
+        public async Task<List<Note>> TakeNotesAsync(int dateNumber, int userId)
         {
-            return await _noteRepository.GetNotesAsync(dateNumber);
+            return await _noteRepository.GetNotesAsync(dateNumber, userId);
         }
 
         public async Task<bool> DeleteNoteAsync(int id)

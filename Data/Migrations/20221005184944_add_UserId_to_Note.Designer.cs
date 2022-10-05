@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220904232841_changeUserModel")]
-    partial class changeUserModel
+    [Migration("20221005184944_add_UserId_to_Note")]
+    partial class add_UserId_to_Note
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,6 +50,9 @@ namespace Data.Migrations
 
                     b.Property<string>("Time")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("User")
+                        .HasColumnType("int");
 
                     b.HasKey("NoteId");
 

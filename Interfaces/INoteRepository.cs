@@ -10,7 +10,7 @@ namespace InterfacesDomain
     public interface INoteRepository 
     {
         Task<Note> GetNoteAsync(int id);
-        Task<List<Note>> GetNotesAsync(int dateNumber);
+        Task<List<Note>> GetNotesAsync(int dateNumber, int userId);
         Task CreateNoteAsync(Note item);
         Task<bool> DeleteNoteAsync(int id);
         Task SaveAsync();

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
@@ -10,8 +9,6 @@ using ImplementationServices.Additionaly;
 using InterfacesDomain;
 using InterfacesServices;
 using InterfacesServices.ApiModels;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 

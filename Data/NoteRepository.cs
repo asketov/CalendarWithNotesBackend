@@ -20,9 +20,9 @@ namespace Data
            return await _db.Notes.FirstOrDefaultAsync(u => u.NoteId == id);
         }
 
-        public async Task<List<Note>> GetNotesAsync(int dateNumber)
+        public async Task<List<Note>> GetNotesAsync(int dateNumber, int userId)
         {
-            return await _db.Notes.Where(note => note.Date.DateNumber == dateNumber).ToListAsync();
+            return await _db.Notes.Where(note => note.Date.DateNumber == dateNumber && note.UserId == userId).ToListAsync();
         }
 
         public async Task CreateNoteAsync(Note note)

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220813151847_create")]
-    partial class create
+    [Migration("20221005185144_add_UserId_to_Note2")]
+    partial class add_UserId_to_Note2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,6 +26,9 @@ namespace Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DateNumber")
+                        .HasColumnType("int");
 
                     b.HasKey("DateId");
 
@@ -48,6 +51,9 @@ namespace Data.Migrations
                     b.Property<string>("Time")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("NoteId");
 
                     b.HasIndex("DateId");
@@ -55,20 +61,33 @@ namespace Data.Migrations
                     b.ToTable("Notes");
                 });
 
+            modelBuilder.Entity("Core.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("Core.Note", b =>
                 {
                     b.HasOne("Core.Date", "Date")
-                        .WithMany("Notes")
+                        .WithMany()
                         .HasForeignKey("DateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Date");
-                });
-
-            modelBuilder.Entity("Core.Date", b =>
-                {
-                    b.Navigation("Notes");
                 });
 #pragma warning restore 612, 618
         }
